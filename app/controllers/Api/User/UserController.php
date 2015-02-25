@@ -187,6 +187,7 @@ class UserController extends BaseApiController
 	public function confirm($key)
 	{
 		$userComponent = new UserComponent();
+
 		$userComponent->confirm($key);
 
 		return $this->responseSuccess($userComponent->getMessage());

@@ -327,10 +327,6 @@ class UserComponent extends UserComponentBase
 	{
 		$phone = Crypt::decrypt($key);
 
-		if (false === $phone) {
-			throw new \ErrorException('Failed input data');
-		}
-
 		$this->user = User::where('phone', '=', $phone)->firstOrFail();
 
 		$this->user->enabled = 1;
