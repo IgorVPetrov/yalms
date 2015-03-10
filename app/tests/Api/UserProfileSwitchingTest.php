@@ -8,7 +8,6 @@
 
 namespace Yalms\Tests\Api;
 
-use Yalms\Component\User\UserComponent;
 use Yalms\Models\Users\User;
 use Yalms\Models\Users\UserAdmin;
 use Yalms\Models\Users\UserStudent;
@@ -17,12 +16,8 @@ use TestCase;
 use DB;
 
 
-
-
-
-class UserProfileSwitchingTest extends TestCase{
-
-
+class UserProfileSwitchingTest extends TestCase
+{
 
 
 	/**
@@ -33,72 +28,82 @@ class UserProfileSwitchingTest extends TestCase{
 
 
 	public function setUp()
-    {
-	    parent::setUp();
-
-	    /**
-	     *  Подготовка таблицы
-	     */
+	{
+		parent::setUp();
 
 
-	    UserAdmin::truncate();
-	    UserStudent::truncate();
-	    UserTeacher::truncate();
-	    DB::statement('SET foreign_key_checks = 0');
-	    User::truncate();
-	    DB::statement('SET foreign_key_checks = 1');
+		/**
+		 *  Подготовка таблицы
+		 */
+		UserAdmin::truncate();
+		UserStudent::truncate();
+		UserTeacher::truncate();
+		DB::statement('SET foreign_key_checks = 0');
+		User::truncate();
+		DB::statement('SET foreign_key_checks = 1');
 
-	    /**
-	     *  Массив данных для создания нового пользователя
-	     *
-	     * @var array
-	     */
-	    $input = array(
-	    'phone'    => '000',
-	    'email'    => 'inf@igoruha.org',
-	    'password' =>'11111111',
-	    'password_confirmation' =>'11111111',
-    );
-	    /**
-	     *  создание нового пользователя
-	     */
-
-	    $this->call('POST','/api/v1/user',$input);
-
-
-
-    }
+		/**
+		 *  Массив данных для создания нового пользователя
+		 *
+		 * @var array
+		 */
+		$input = array(
+			'phone'                 => '000',
+			'email'                 => 'inf@igoruha.org',
+			'password'              => '11111111',
+			'password_confirmation' => '11111111',
+		);
+		/**
+		 *  создание нового пользователя
+		 */
+		$this->call('POST', '/api/v1/user/', $input);
 
 
-
+	}
 
 	public function testStudentProfileEnable()
 	{
-		$input= [
-			'id'      => 1,
-			'profile' => 'student',
-			'enabled' => 1
-		];
+		$this->setProfile('student', 1);
 
-		$this->call('POST','/api/v1/user/profile',$input);
-
-		$this->assertResponseOk();
-
+		$this->assertTrue(UserStudent::find(1)->enabled == 1);
 	}
 
 	public function testStudentProfileDisable()
 	{
-		$this->assertTrue(true);
+		$this->setProfile('student', 1);
+
+		$this->setProfile('student', 0);
+
+		$this->assertTrue(UserStudent::find(1)->enabled == 0);
 
 	}
+
 	public function testTeacherProfileEnable()
 	{
-		$this->assertTrue(true);
+		$this->setProfile('teacher', 1);
+
+		$this->assertTrue(UserTeacher::find(1)->enabled == 1);
+
 	}
 
 	public function testTeacherProfileDisable()
 	{
-		$this->assertTrue(true);
+		$this->setProfile('teacher', 1);
+
+		$this->setProfile('teacher', 0);
+
+		$this->assertTrue(UserTeacher::find(1)->enabled == 0);
+	}
+
+	private function setProfile($profile, $enabled)
+	{
+		$input = [
+			'id'      => 1,
+			'profile' => $profile,
+			'enabled' => $enabled
+		];
+
+		$this->call('POST', '/api/v1/user/profile', $input);
 	}
 
 }
