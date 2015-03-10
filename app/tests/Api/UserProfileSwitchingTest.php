@@ -61,6 +61,9 @@ class UserProfileSwitchingTest extends TestCase
 
 	}
 
+	/**
+	 *   проверка влючения студента
+	 */
 	public function testStudentProfileEnable()
 	{
 		$this->setProfile('student', 1);
@@ -68,6 +71,9 @@ class UserProfileSwitchingTest extends TestCase
 		$this->assertTrue(UserStudent::find(1)->enabled == 1);
 	}
 
+	/**
+	 *  проверка выключения студента
+	 */
 	public function testStudentProfileDisable()
 	{
 		$this->setProfile('student', 1);
@@ -78,6 +84,9 @@ class UserProfileSwitchingTest extends TestCase
 
 	}
 
+	/**
+	 * проверка включения преподавателя
+	 */
 	public function testTeacherProfileEnable()
 	{
 		$this->setProfile('teacher', 1);
@@ -86,6 +95,9 @@ class UserProfileSwitchingTest extends TestCase
 
 	}
 
+	/**
+	 *  проверка выключения преподавателя
+	 */
 	public function testTeacherProfileDisable()
 	{
 		$this->setProfile('teacher', 1);
@@ -95,6 +107,13 @@ class UserProfileSwitchingTest extends TestCase
 		$this->assertTrue(UserTeacher::find(1)->enabled == 0);
 	}
 
+	/**
+	 *
+	 *  вспомогательная функция, устанавливающая состояние профиля
+	 *
+	 * @param $profile string   профиль пользователя teacher student
+	 * @param $enabled int      1 - включить 0 - выключить
+	 */
 	private function setProfile($profile, $enabled)
 	{
 		$input = [
