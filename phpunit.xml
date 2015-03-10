@@ -9,12 +9,15 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
->
-    <testsuites>
-	    <testsuite name="Users">
-		    <file>./app/tests/Api/UserTest.php</file>
-		    <file>./app/tests/Api/UserProfilesTest.php</file>
-		    <file>./app/tests/Api/UserDeleteTest.php</file>
-	    </testsuite>
-    </testsuites>
+		>
+	<testsuites>
+		<testsuite name="Users">
+			<file>./app/tests/Api/UserTest.php</file>
+			<file>./app/tests/Api/UserProfilesTest.php</file>
+			<file>./app/tests/Api/UserDeleteTest.php</file>
+		</testsuite>
+		<testsuite name="UserProfileSwitching">
+			<file>./app/tests/Api/UserProfileSwitchingTest.php</file>
+		</testsuite>
+	</testsuites>
 </phpunit>
