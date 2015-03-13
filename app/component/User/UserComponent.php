@@ -170,7 +170,7 @@ class UserComponent extends UserComponentBase
 		}
 
 
-		//MailerComponent::userConfirm($this->input['phone'], $this->input['email']);
+		MailerComponent::userConfirm($this->input['phone'], $this->input['email']);
 
 		return self::RESULT_OK;
 	}

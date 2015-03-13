@@ -8,6 +8,7 @@
 
 namespace Yalms\Tests\Api;
 
+
 use Yalms\Models\Users\User;
 use Yalms\Models\Users\UserAdmin;
 use Yalms\Models\Users\UserStudent;
@@ -21,6 +22,11 @@ class UserProfileSwitchingTest extends TestCase
 
 
 	/**
+	 * @var
+	 */
+	private $user_id;
+
+	/**
 	 *  Начальные установки
 	 *
 	 * @throws \ErrorException
@@ -29,8 +35,8 @@ class UserProfileSwitchingTest extends TestCase
 
 	public function setUp()
 	{
-		parent::setUp();
 
+		parent::setUp();
 
 		/**
 		 *  Подготовка таблицы
@@ -49,7 +55,7 @@ class UserProfileSwitchingTest extends TestCase
 		 */
 		$input = array(
 			'phone'                 => '000',
-			'email'                 => 'inf@igoruha.org',
+			'email'                 => 'info@igoruha.org',
 			'password'              => '11111111',
 			'password_confirmation' => '11111111',
 		);
@@ -57,6 +63,11 @@ class UserProfileSwitchingTest extends TestCase
 		 *  создание нового пользователя
 		 */
 		$this->call('POST', '/api/v1/user/', $input);
+
+		/**
+		 *  получение id созданного пользователя
+		 */
+		$this->user_id = DB::table('users')->where('phone', '000')->pluck('id');
 
 
 	}
@@ -66,9 +77,12 @@ class UserProfileSwitchingTest extends TestCase
 	 */
 	public function testStudentProfileEnable()
 	{
-		$this->setProfile('student', 1);
 
-		$this->assertTrue(UserStudent::find(1)->enabled == 1);
+		$this->setProfile($this->user_id, 'student', 1);
+
+		$student = UserStudent::find($this->user_id);
+
+		$this->assertEquals($student->enabled , 1);
 	}
 
 	/**
@@ -76,11 +90,14 @@ class UserProfileSwitchingTest extends TestCase
 	 */
 	public function testStudentProfileDisable()
 	{
-		$this->setProfile('student', 1);
 
-		$this->setProfile('student', 0);
+		$this->setProfile($this->user_id, 'student', 1);
 
-		$this->assertTrue(UserStudent::find(1)->enabled == 0);
+		$this->setProfile($this->user_id, 'student', 0);
+
+		$student = UserStudent::find($this->user_id);
+
+		$this->assertEquals($student->enabled, 0);
 
 	}
 
@@ -89,9 +106,12 @@ class UserProfileSwitchingTest extends TestCase
 	 */
 	public function testTeacherProfileEnable()
 	{
-		$this->setProfile('teacher', 1);
 
-		$this->assertTrue(UserTeacher::find(1)->enabled == 1);
+		$this->setProfile($this->user_id, 'teacher', 1);
+
+		$teacher = UserTeacher::find($this->user_id);
+
+		$this->assertEquals($teacher->enabled, 1);
 
 	}
 
@@ -100,24 +120,28 @@ class UserProfileSwitchingTest extends TestCase
 	 */
 	public function testTeacherProfileDisable()
 	{
-		$this->setProfile('teacher', 1);
 
-		$this->setProfile('teacher', 0);
+		$this->setProfile($this->user_id, 'teacher', 1);
 
-		$this->assertTrue(UserTeacher::find(1)->enabled == 0);
+		$this->setProfile($this->user_id, 'teacher', 0);
+
+		$teacher = UserTeacher::find($this->user_id);
+
+		$this->assertEquals($teacher->enabled, 0);
 	}
 
 	/**
 	 *
 	 *  вспомогательная функция, устанавливающая состояние профиля
 	 *
+	 * @param $id      int       идентификатор пользователя
 	 * @param $profile string   профиль пользователя teacher student
 	 * @param $enabled int      1 - включить 0 - выключить
 	 */
-	private function setProfile($profile, $enabled)
+	private function setProfile($id, $profile, $enabled)
 	{
 		$input = [
-			'id'      => 1,
+			'id'      => $id,
 			'profile' => $profile,
 			'enabled' => $enabled
 		];
