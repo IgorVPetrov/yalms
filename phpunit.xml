@@ -19,6 +19,7 @@
 		<testsuite name="User">
 			<file>./app/tests/Api/UserProfileSwitchingTest.php</file>
 			<file>./app/tests/Api/UserEmailConfirmTest.php</file>
+			<file>./app/tests/Api/MailerComponentTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

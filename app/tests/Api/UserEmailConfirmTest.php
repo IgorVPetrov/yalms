@@ -20,6 +20,13 @@ use DOMDocument;
 class UserEmailConfirmTest extends TestCase
 {
 
+
+	/**
+	 * @var string  путь к тестовому лог-файлу
+	 */
+	private $path;
+
+
 	/**
 	 *  Начальные установки
 	 *
@@ -54,13 +61,15 @@ class UserEmailConfirmTest extends TestCase
 		/**
 		 *  создание специального лог-файла для тестов
 		 */
-		$log_file_handle = fopen(storage_path() . '/logs/laravel_testing.log', 'a+');
+
+		$this->path = storage_path('logs/laravel_testing.log');
+
+		$log_file_handle = fopen($this->path, 'a+');
 		fclose($log_file_handle);
 		/**
 		 *  переключение вывода логов на этот файл
-		 *
 		 */
-		Log::useFiles(storage_path() . '/logs/laravel_testing.log');
+		Log::useFiles($this->path);
 
 
 		/**
@@ -93,7 +102,7 @@ class UserEmailConfirmTest extends TestCase
 	 */
 	private function getConfirmURL()
 	{
-		$string = file_get_contents(storage_path() . '/logs/laravel_testing.log');
+		$string = file_get_contents($this->path);
 
 		$string = substr($string, strpos($string, '<!DOCTYPE html>'));
 
@@ -119,107 +128,11 @@ class UserEmailConfirmTest extends TestCase
 	{
 		parent::tearDown();
 
-		Log::useFiles(storage_path() . '/logs/laravel.log');
+		Log::useFiles(storage_path('logs/laravel.log'));
 
-		unlink(storage_path() . '/logs/laravel_testing.log');
+		unlink($this->path);
 
 	}
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
