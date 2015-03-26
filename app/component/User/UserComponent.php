@@ -7,7 +7,7 @@ use Yalms\Models\Users\User;
 use Yalms\Models\Users\UserAdmin;
 use Yalms\Models\Users\UserStudent;
 use Yalms\Models\Users\UserTeacher;
-use Yalms\Component\Mailer\MailerComponent;
+use Event;
 
 /**
  * Class UserComponent
@@ -170,7 +170,12 @@ class UserComponent extends UserComponentBase
 		}
 
 
-		MailerComponent::userConfirm($this->input['phone'], $this->input['email']);
+		/**
+		 *  генерация события "создан новый пользователь"
+		 *
+		 */
+		Event::fire('user.created', array($this->user));
+
 
 		return self::RESULT_OK;
 	}
